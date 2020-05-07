@@ -7,16 +7,15 @@ void printError(std::string msg){
     std::cerr << "[ERROR]: " << msg << std::endl;
 }
 
-
-using namespace std;
 int main(int argc, char** argv) {
     if(argc >= 4){
         std::string inputFileName = argv[1];
         std::string outputFileName = argv[2];
         std::string transformation = argv[3];
 
+        PNM* image = nullptr;
         try {
-            PNM *image = new PNM();
+            image = new PNM();
             image->read(inputFileName);
             if (transformation == "0") {
                 image->inverseColors();
@@ -30,6 +29,7 @@ int main(int argc, char** argv) {
                 image->rotateLeft90();
             } else {
                 printError("Arguments are not correct");
+                delete image;
                 return 0;
             }
             image->write(outputFileName);
@@ -37,8 +37,10 @@ int main(int argc, char** argv) {
             delete image;
         }catch(std::bad_alloc& error){
             printError("Memory allocation error");
+            delete image;
         }catch(std::exception& error){
             printError(error.what());
+            delete image;
         }
     }else{
         printError("Arguments are not correct");

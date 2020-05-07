@@ -10,7 +10,7 @@ class ImageException : public std::exception{
     std::string msg;
     public:
         ImageException(std::string msg): msg(std::move(msg)) {}
-        virtual const char* what() const noexcept{
+        virtual const char* what(){
             return this->msg.c_str();
         }
 };
