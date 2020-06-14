@@ -123,6 +123,7 @@ void PNM::dithering(int type, int bits) {
     auto dither = new Dither(bits, this->matrix);
     switch(type){
         case 0:
+            dither->none();
             break;
         case 1:
             dither->Ordered();
@@ -154,7 +155,7 @@ PNM::~PNM(){
 void PNM::drawGradient(double gamma) {
     for(int h = 0; h < this->matrix->getHeight(); h++){
         for(int w = 0; w < this->matrix->getWidth(); w++){
-            double intensive = (1.0 * (w + 1) / (this->matrix->getWidth() + 1));
+            double intensive = (1.0 * w / (this->matrix->getWidth() - 1));
             uchar color = (PixelMatrix::gamma(intensive, gamma) * 255);
             this->matrix->setColor(h, w, color);
         }

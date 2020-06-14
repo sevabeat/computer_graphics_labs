@@ -5,6 +5,7 @@
 #include <vector>
 #include <iostream>
 #include <cmath>
+#include <algorithm>
 #include "PixelMatrix.h"
 
 #define D(x) ((double)x / 64.0) - 0.5
@@ -35,6 +36,7 @@ public:
     void Sierra3();
     void Atkinson();
     void Halftone();
+    void none();
 };
 
 

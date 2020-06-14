@@ -39,6 +39,16 @@ uchar Dither::nearestColor(uchar color) {
     return new_color;
 }
 
+void Dither::none() {
+    for(int h = 0; h < this->matrix->getHeight(); h++){
+        for(int w = 0; w < this->matrix->getWidth(); w++){
+            uchar color = this->matrix->getColor(h, w);
+            uchar new_color = this->nearestColor(color);
+            this->matrix->setColor(h, w, new_color);
+        }
+    }
+}
+
 void Dither::Ordered() {
     for(int h = 0; h < this->matrix->getHeight(); h++){
         for(int w = 0; w < this->matrix->getWidth(); w++){

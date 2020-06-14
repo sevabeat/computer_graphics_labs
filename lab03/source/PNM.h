@@ -6,6 +6,7 @@
 #include <fstream>
 #include <iostream>
 #include <cmath>
+#include <algorithm>
 #include "exception/ImageException.h"
 
 #include "PixelMatrix.h"

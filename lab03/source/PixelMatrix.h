@@ -4,6 +4,7 @@
 #include <fstream>
 #include <iostream>
 #include <cmath>
+#include <algorithm>
 #include "exception/ImageException.h"
 #include "geometry/Rectangle.h"
 
@@ -58,6 +59,8 @@ public:
 
     PIXEL getColor(int h, int w, int offset = 0);
     void setColor(int h, int w, PIXEL color, int offset = 0);
+
+    void unique();
 };
 
 #endif

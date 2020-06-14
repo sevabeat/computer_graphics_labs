@@ -158,3 +158,17 @@ void PixelMatrix::setColor(int h, int w, PIXEL color, int offset) {
     this->matrix[this->getPosition(h, w) + offset] = color;
 }
 
+void PixelMatrix::unique() {
+    std::vector<int> uniq(256, 0);
+    for(int i = 0; i < this->size(); i++){
+        uniq[(int)this->matrix[i]]++;
+    }
+    int cnt = 0;
+    for(int i = 0; i < uniq.size(); i++){
+        if(uniq[i] > 0){
+            cnt++;
+        }
+    }
+    std::cout << cnt << std::endl;
+}
+
