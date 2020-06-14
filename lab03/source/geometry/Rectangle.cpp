@@ -27,7 +27,6 @@ bool Rectangle::isPointInArea(Point p) {
 
 
 double Rectangle::commonArea(Point p){
-    if(p.x < 0 || p.y < 0) return 0.0;
     //если 4 вершины пикселя входят в прямоугльник то очев пиксель полностью входит
     bool isAllPeaksInArea = true;
     for(int i = 0; i <= 1; i++){

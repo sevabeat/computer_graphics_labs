@@ -1,6 +1,6 @@
 #include "PNM.h"
 
-PNM::PNM(): loaded(false){}
+PNM::PNM(): loaded(false), matrix(nullptr){}
 
 void PNM::read(std::string filePath){
     std::ifstream fileStream(filePath, std::ios::binary);
@@ -16,9 +16,11 @@ void PNM::read(std::string filePath){
     }else{
         throw ImageException("File format is not supported");
     }
+
     if(this->type == "P6"){
         throw ImageException("File format is not supported");
     }
+
     std::string comment;
     int widthOffset = (int)fileStream.tellg();
     fileStream.seekg(1, std::ios::cur);
@@ -88,11 +90,8 @@ void PNM::drawLine(Point from, Point to, double thickness,  PIXEL_COLOR color, d
     // x1 = -(y1 * y2) / x2
     // y1 = -(x1 * x2) / y2
 
-//    from -= Point(1, 1);
-//    to -= Point(1, 1);
 
     Point line_vector(to.x - from.x, to.y - from.y);
-    //line_vector = line_vector - Point(1, 1);
     Point thickness_vector(0,0);
 
     if(line_vector.x != 0){
@@ -109,24 +108,8 @@ void PNM::drawLine(Point from, Point to, double thickness,  PIXEL_COLOR color, d
 
 
     auto line = new Rectangle(p1, p2, p3, p4);
-
-    Point start_p = from;
-    if(to.x < from.x){
-        start_p = to;
-    }
-    if(line->commonArea(start_p - Point(1, 1)) > 0){
-        delete line;
-        line = new Rectangle(p1 + Point(1, 1), p2 + Point(1, 1), p3 + Point(1, 1), p4 + Point(1, 1));
-    }else if(line->commonArea(start_p - Point(0, 1)) > 0){
-        delete line;
-        line = new Rectangle(p1 + Point(0, 1), p2 + Point(0, 1), p3 + Point(0, 1), p4 + Point(0, 1));
-    }else if(line->commonArea(start_p - Point(1, 0)) > 0){
-        delete line;
-        line = new Rectangle(p1 + Point(1, 0), p2 + Point(1, 0), p3 + Point(1, 0), p4 + Point(1, 0));
-    }
-
-    for(double x = std::max(line->getMinX() - 10, 0.0); x < std::min(line->getMaxX() + 10, (double)this->matrix->getWidth()); x++){
-        for(double y = std::max(line->getMinY() - 10, 0.0); y < std::min(line->getMaxY() + 10, (double)this->matrix->getHeight()); y++){
+    for(double x = std::max(line->getMinX() - 2, 0.0); x < std::min(line->getMaxX() + 3, (double)this->matrix->getWidth()); x++){
+        for(double y = std::max(line->getMinY() - 2, 0.0); y < std::min(line->getMaxY() + 3, (double)this->matrix->getHeight()); y++){
             double area = line->commonArea({x, y});
             if(area > 0){
                 this->matrix->drawPoint({x, y}, color, area, gamma);
@@ -136,7 +119,59 @@ void PNM::drawLine(Point from, Point to, double thickness,  PIXEL_COLOR color, d
     delete line;
 }
 
+void PNM::dithering(int type, int bits) {
+    auto dither = new Dither(bits, this->matrix);
+    switch(type){
+        case 0:
+            break;
+        case 1:
+            dither->Ordered();
+            break;
+        case 2:
+            dither->Random();
+            break;
+        case 3:
+            dither->FloydSteinberg();
+            break;
+        case 4:
+            dither->JJN();
+        case 5:
+            dither->Sierra3();
+        case 6:
+            dither->Atkinson();
+        case 7:
+            dither->Halftone();
+        default:
+            break;
+    }
+    delete dither;
+}
+
 PNM::~PNM(){
     delete this->matrix;
 }
 
+void PNM::drawGradient(double gamma) {
+    for(int h = 0; h < this->matrix->getHeight(); h++){
+        for(int w = 0; w < this->matrix->getWidth(); w++){
+            double intensive = (1.0 * (w + 1) / (this->matrix->getWidth() + 1));
+            uchar color = (PixelMatrix::gamma(intensive, gamma) * 255);
+            this->matrix->setColor(h, w, color);
+        }
+    }
+}
+
+void PNM::gammaCorrection(char gamma_type, double gamma) {
+    for(int h = 0; h < this->matrix->getHeight(); h++){
+        for(int w = 0; w < this->matrix->getWidth(); w++){
+            double intensive = 1.0 * this->matrix->getColor(h, w) / this->matrix->getDepth();
+            uchar color = 0;
+            if(gamma_type == 0){
+                color = (PixelMatrix::gamma(intensive, gamma) * 255);
+            }else if(gamma_type == 1){
+                color = (PixelMatrix::gamma_back(intensive, gamma) * 255);
+            }
+            this->matrix->setColor(h, w, color);
+        }
+    }
+}

@@ -9,6 +9,7 @@
 #include "exception/ImageException.h"
 
 #include "PixelMatrix.h"
+#include "Dither.h"
 
 
 class PNM{
@@ -17,7 +18,7 @@ private:
     std::vector<std::string> comments;
     PixelMatrix* matrix;
     bool loaded;
-    void gammaCorrection(char gamma_type);
+
 public:
     PNM();
     ~PNM();
@@ -30,6 +31,9 @@ public:
     void rotateLeft90();
     void showMetaData();
     void drawLine(Point from, Point to, double thickness, PIXEL_COLOR color, double gamma = -1);
+    void dithering(int type, int bits);
+    void drawGradient(double gamma);
+    void gammaCorrection(char gamma_type, double gamma);
 };
 
 

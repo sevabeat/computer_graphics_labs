@@ -25,7 +25,7 @@
   <component name="ProjectId" id="1XhTm7IqfOAc7cXsqU2rdMvRwRP" />
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/cmake-build-debug" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="settings.editor.selected.configurable" value="CMakeSettings" />
   </component>
@@ -50,7 +50,7 @@
     </option>
   </component>
   <component name="RunManager">
-    <configuration name="prog" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="rays2.pnm out2.pnm 255 1.0 17 7 0 2" PASS_PARENT_ENVS_2="true" PROJECT_NAME="prog" TARGET_NAME="prog" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="prog" RUN_TARGET_NAME="prog">
+    <configuration name="prog" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="rays2.pnm out.pnm 1 0 0 1" PASS_PARENT_ENVS_2="true" PROJECT_NAME="prog" TARGET_NAME="prog" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="prog" RUN_TARGET_NAME="prog">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
@@ -71,8 +71,7 @@
       <workItem from="1586550190627" duration="2044000" />
       <workItem from="1588673107761" duration="17109000" />
       <workItem from="1588775157029" duration="1614000" />
-      <workItem from="1590938844118" duration="54602000" />
-      <workItem from="1592077909274" duration="7568000" />
+      <workItem from="1590938844118" duration="71495000" />
     </task>
     <servers />
   </component>

@@ -56,6 +56,8 @@ public:
     double static gamma(double value, double gamma);
     double static gamma_back(double value, double gamma);
 
+    PIXEL getColor(int h, int w, int offset = 0);
+    void setColor(int h, int w, PIXEL color, int offset = 0);
 };
 
 #endif

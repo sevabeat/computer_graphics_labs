@@ -150,3 +150,11 @@ PixelMatrix::~PixelMatrix(){
     delete[] this->matrix;
 }
 
+PIXEL PixelMatrix::getColor(int h, int w, int offset) {
+    return this->matrix[this->getPosition(h, w) + offset];
+}
+
+void PixelMatrix::setColor(int h, int w, PIXEL color, int offset) {
+    this->matrix[this->getPosition(h, w) + offset] = color;
+}
+

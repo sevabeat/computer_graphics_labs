@@ -34,11 +34,6 @@ public:
     Point operator-(Point p){
         return {this->x - p.x, this->y - p.y};
     }
-    Point operator-=(Point p){
-        this->x -= p.x;
-        this->y -= p.y;
-        return *this;
-    }
 };
 
 #endif //PROG_POINT_H

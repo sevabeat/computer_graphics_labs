@@ -1,6 +1,9 @@
 #include <iostream>
 #include "source/PNM.h"
+#include "source/Dither.h"
 #pragma pack(1)
+
+
 
 void printError(std::string msg){
     std::cerr<< "Line drawing failed!" << std::endl;
@@ -8,24 +11,27 @@ void printError(std::string msg){
 }
 
 int main(int argc, char** argv) {
-    if(argc >= 9){
+    if(argc >= 7){
         PNM* image = nullptr;
         try {
             std::string inputFileName = argv[1];
             std::string outputFileName = argv[2];
-            uchar brightness = (uchar) std::atoi(argv[3]);
-            double thickness = std::stod(argv[4]);
-            double gamma = -1;
 
-            Point from(std::stod(argv[5]), std::stod(argv[6]));
-            Point to(std::stod(argv[7]), std::stod(argv[8]));
+            bool gradient = std::atoi(argv[3]) == 1;
+            int ditherType = std::atoi(argv[4]);
+            int bits =  std::atoi(argv[5]);
+            double gamma = std::stod(argv[6]);
+            if(gamma == 0) gamma = -1;
 
-            if (argc >= 10) {
-                gamma = std::stod(argv[9]);
-            }
             image = new PNM();
             image->read(inputFileName);
-            image->drawLine(from, to, thickness, {brightness}, gamma);
+            if(gradient){
+                image->drawGradient(gamma);
+            }else{
+                image->gammaCorrection(0, gamma);
+            }
+            image->dithering(ditherType, bits);
+            image->gammaCorrection(1, gamma);
             image->write(outputFileName);
 
             delete image;
