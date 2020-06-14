@@ -1,6 +1,6 @@
 #include "PNM.h"
 
-PNM::PNM(): loaded(false){}
+PNM::PNM(): loaded(false), matrix(nullptr){}
 
 void PNM::read(std::string filePath){
     std::ifstream fileStream(filePath, std::ios::binary);
@@ -102,6 +102,21 @@ void PNM::drawLine(Point from, Point to, double thickness,  PIXEL_COLOR color, d
 
 
     auto line = new Rectangle(p1, p2, p3, p4);
+    
+    Point start_p = from;
+    if(to.x < from.x){
+        start_p = to;
+    }
+    if(line->commonArea(start_p - Point(1, 1)) > 0){
+        delete line;
+        line = new Rectangle(p1 + Point(1, 1), p2 + Point(1, 1), p3 + Point(1, 1), p4 + Point(1, 1));
+    }else if(line->commonArea(start_p - Point(0, 1)) > 0){
+        delete line;
+        line = new Rectangle(p1 + Point(0, 1), p2 + Point(0, 1), p3 + Point(0, 1), p4 + Point(0, 1));
+    }else if(line->commonArea(start_p - Point(1, 0)) > 0){
+        delete line;
+        line = new Rectangle(p1 + Point(1, 0), p2 + Point(1, 0), p3 + Point(1, 0), p4 + Point(1, 0));
+    }
 
     for(double x = std::max(line->getMinX() - 2, 0.0); x < std::min(line->getMaxX() + 3, (double)this->matrix->getWidth()); x++){
         for(double y = std::max(line->getMinY() - 2, 0.0); y < std::min(line->getMaxY() + 3, (double)this->matrix->getHeight()); y++){
