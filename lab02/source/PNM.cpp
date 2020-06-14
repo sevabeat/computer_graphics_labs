@@ -16,6 +16,9 @@ void PNM::read(std::string filePath){
     }else{
         throw ImageException("File format is not supported");
     }
+    if(this->type == "P6"){
+        throw ImageException("File format is not supported");
+    }
     std::string comment;
     int widthOffset = (int)fileStream.tellg();
     fileStream.seekg(1, std::ios::cur);
