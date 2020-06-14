@@ -25,7 +25,6 @@ bool Rectangle::isPointInArea(Point p) {
     return new_x >= 0 && new_y >= 0 && new_x <= 1 && new_y <= 1;
 }
 
-
 double Rectangle::commonArea(Point p){
     //если 4 вершины пикселя входят в прямоугльник то очев пиксель полностью входит
     bool isAllPeaksInArea = true;
@@ -37,17 +36,15 @@ double Rectangle::commonArea(Point p){
     if(isAllPeaksInArea) return 1.0;
 
     double area = 0.0;
-
     //делим пиксель на 100 частей и смотрим сколько из них вошло в прямоугольник
 
-    for(double dx = 0.05; dx <= 0.95; dx += 0.1){
-        for(double dy = 0.05; dy <= 0.95; dy += 0.1){
+    for(double dx = 0.0; dx < 1.0; dx += 0.1){
+        for(double dy = 0.0; dy < 1.0; dy += 0.1){
             if(this->isPointInArea(p + Point(dx, dy))){
                 area += 0.01;
             }
         }
     }
-
     return area;
 }
 

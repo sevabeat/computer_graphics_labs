@@ -5,6 +5,7 @@
 #include <vector>
 #include <utility>
 #include <cmath>
+#include <algorithm>
 #include "Point.h"
 
 /*
