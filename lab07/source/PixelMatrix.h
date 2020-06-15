@@ -27,7 +27,6 @@ typedef std::vector< COLOR > COLOR_LIST;
 class PixelMatrix{
 private:
 
-    uint pixelBytes;
     uint width;
     uint height;
     uchar depth;
@@ -35,6 +34,7 @@ private:
     ull _size;
 public:
     PIXEL* matrix;
+    uint pixelBytes;
     ull getPosition(uint h, uint w, uint lineWidth = -1);
     PixelMatrix(uint width, uint height, uint pixelBytes, uchar depth);
     ~PixelMatrix();
