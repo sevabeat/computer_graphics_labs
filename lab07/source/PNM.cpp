@@ -11,7 +11,6 @@ void PNM::read(std::string filePath){
     uint pixelBytes;
     if(this->type == "P5"){
         pixelBytes = 1;
-        throw ImageException("File format is not supported");
     }else if(this->type == "P6"){
         pixelBytes = 3;
     }else{
@@ -75,12 +74,12 @@ PNM::~PNM(){
 }
 
 void PNM::ContrastAdaptiveSharpening(double sharpness) {
-    PixelMatrix* new_matrix = new PixelMatrix(this->matrix->getWidth(), this->matrix->getHeight(), 3, this->matrix->getDepth());
+    PixelMatrix* new_matrix = new PixelMatrix(this->matrix->getWidth(), this->matrix->getHeight(), this->matrix->pixelBytes, this->matrix->getDepth());
 
 
     //Заполняю рамку шириной 1px в новой матрице
     for(int w = 0; w < this->matrix->getWidth(); w++){
-        for(int i = 0; i < 3; i++) {
+        for(int i = 0; i < this->matrix->pixelBytes; i++) {
             new_matrix->matrix[new_matrix->getPosition(0, w) + i] = this->matrix->matrix[this->matrix->getPosition(0, w) + i];
             new_matrix->matrix[new_matrix->getPosition(this->matrix->getHeight() - 1, w) + i]
             = this->matrix->matrix[this->matrix->getPosition(this->matrix->getHeight() - 1, w) + i];
@@ -88,7 +87,7 @@ void PNM::ContrastAdaptiveSharpening(double sharpness) {
     }
 
     for(int h = 1; h < this->matrix->getHeight() - 1; h++){
-        for(int i = 0; i < 3; i++) {
+        for(int i = 0; i < this->matrix->pixelBytes; i++) {
             new_matrix->matrix[new_matrix->getPosition(h, 0) + i] = this->matrix->matrix[this->matrix->getPosition(h, 0) + i];
             new_matrix->matrix[new_matrix->getPosition(h, this->matrix->getWidth() - 1) + i]
                     = this->matrix->matrix[this->matrix->getPosition(h, this->matrix->getWidth() - 1) + i];
@@ -109,9 +108,16 @@ void PNM::ContrastAdaptiveSharpening(double sharpness) {
             COLOR_LIST local(9);
             for(int dy = -1; dy <= 1; dy++) {
                 for (int dx = -1; dx <= 1; dx++) {
-                    local[(dy + 1) * 3 + dx + 1].R = PNM::toIntensive(this->matrix->matrix[this->matrix->getPosition(h + dy, w + dx) + 0]);
-                    local[(dy + 1) * 3 + dx + 1].G = PNM::toIntensive(this->matrix->matrix[this->matrix->getPosition(h + dy, w + dx) + 1]);
-                    local[(dy + 1) * 3 + dx + 1].B = PNM::toIntensive(this->matrix->matrix[this->matrix->getPosition(h + dy, w + dx) + 2]);
+                    if(this->type == "P6"){
+                        local[(dy + 1) * 3 + dx + 1].R = PNM::toIntensive(this->matrix->matrix[this->matrix->getPosition(h + dy, w + dx) + 0]);
+                        local[(dy + 1) * 3 + dx + 1].G = PNM::toIntensive(this->matrix->matrix[this->matrix->getPosition(h + dy, w + dx) + 1]);
+                        local[(dy + 1) * 3 + dx + 1].B = PNM::toIntensive(this->matrix->matrix[this->matrix->getPosition(h + dy, w + dx) + 2]);
+                    }else if(this->type == "P5"){
+                        local[(dy + 1) * 3 + dx + 1].R = PNM::toIntensive(this->matrix->matrix[this->matrix->getPosition(h + dy, w + dx)]);
+                        local[(dy + 1) * 3 + dx + 1].G = local[(dy + 1) * 3 + dx + 1].R;
+                        local[(dy + 1) * 3 + dx + 1].B = local[(dy + 1) * 3 + dx + 1].R;
+                    }
+
                 }
             }
 
@@ -155,10 +161,13 @@ void PNM::ContrastAdaptiveSharpening(double sharpness) {
 
 //            std::cout << result.B << std::endl;
 //            return;
-
-            new_matrix->matrix[new_matrix->getPosition(h, w) + 0] = PNM::toColor(result.R);
-            new_matrix->matrix[new_matrix->getPosition(h, w) + 1] = PNM::toColor(result.G);
-            new_matrix->matrix[new_matrix->getPosition(h, w) + 2] = PNM::toColor(result.B);
+            if(this->type == "P6") {
+                new_matrix->matrix[new_matrix->getPosition(h, w) + 0] = PNM::toColor(result.R);
+                new_matrix->matrix[new_matrix->getPosition(h, w) + 1] = PNM::toColor(result.G);
+                new_matrix->matrix[new_matrix->getPosition(h, w) + 2] = PNM::toColor(result.B);
+            }else if(this->type == "P5"){
+                new_matrix->matrix[new_matrix->getPosition(h, w)] = PNM::toColor(result.R);
+            }
 
             //return;
         }
