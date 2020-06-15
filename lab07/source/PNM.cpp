@@ -11,6 +11,7 @@ void PNM::read(std::string filePath){
     uint pixelBytes;
     if(this->type == "P5"){
         pixelBytes = 1;
+        throw ImageException("File format is not supported");
     }else if(this->type == "P6"){
         pixelBytes = 3;
     }else{
